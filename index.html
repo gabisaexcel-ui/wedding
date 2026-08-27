@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Project Management</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-logo">PM</div>
+
+            <div>
+                <h2>Project</h2>
+                <span>Management</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-menu">
+
+            <button class="menu-item active" onclick="showPage('dashboard')">
+                <span>⌂</span>
+                Dashboard
+            </button>
+
+            <button class="menu-item" onclick="showPage('clients')">
+                <span>♙</span>
+                Klien
+            </button>
+
+            <button class="menu-item" onclick="showPage('projects')">
+                <span>▣</span>
+                Proyek
+            </button>
+
+            <button class="menu-item" onclick="showPage('payments')">
+                <span>💳</span>
+                Pembayaran
+            </button>
+
+            <button class="menu-item" onclick="showPage('vendors')">
+                <span>◆</span>
+                Vendor
+            </button>
+
+            <button class="menu-item" onclick="showPage('invoices')">
+                <span>▤</span>
+                Invoice
+            </button>
+
+            <button class="menu-item" onclick="showPage('schedules')">
+                <span>◷</span>
+                Jadwal
+            </button>
+
+            <button class="menu-item" onclick="showPage('checklist')">
+                <span>✓</span>
+                Checklist
+            </button>
+
+            <button class="menu-item" onclick="showPage('settings')">
+                <span>⚙</span>
+                Setting
+            </button>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <span>Project Management</span>
+            <small>v1.0.0</small>
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN
+    ========================== -->
+
+    <main class="main">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div>
+                <h1 id="pageTitle">Dashboard</h1>
+                <p id="pageSubtitle">
+                    Ringkasan seluruh proyek kamu
+                </p>
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="notification">
+                    🔔
+                </div>
+
+                <div class="profile">
+                    <div class="profile-avatar">
+                        U
+                    </div>
+
+                    <div>
+                        <strong>Admin</strong>
+                        <span>Administrator</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================
+             PAGE CONTENT
+        ========================== -->
+
+        <section class="content">
+
+
+            <!-- =====================
+                 DASHBOARD
+            ====================== -->
+
+            <div id="dashboard" class="page active">
+
+                <div class="welcome">
+                    <div>
+                        <span class="eyebrow">OVERVIEW</span>
+
+                        <h2>
+                            Selamat datang 👋
+                        </h2>
+
+                        <p>
+                            Pantau klien, proyek, pembayaran,
+                            vendor dan jadwal dari satu tempat.
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- STAT CARDS -->
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ♙
+                        </div>
+
+                        <div>
+                            <span>Total Klien</span>
+                            <strong id="totalClients">0</strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ▣
+                        </div>
+
+                        <div>
+                            <span>Total Proyek</span>
+                            <strong id="totalProjects">0</strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            Rp
+                        </div>
+
+                        <div>
+                            <span>Pembayaran Klien</span>
+                            <strong id="totalClientPayment">
+                                Rp. 0
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            !
+                        </div>
+
+                        <div>
+                            <span>Piutang</span>
+                            <strong id="totalReceivable">
+                                Rp. 0
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DASHBOARD GRID -->
+
+                <div class="dashboard-grid">
+
+
+                    <!-- JADWAL -->
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+                                <h3>Jadwal Terdekat</h3>
+                                <span>
+                                    Agenda proyek berikutnya
+                                </span>
+                            </div>
+
+                            <button
+                                class="text-button"
+                                onclick="showPage('schedules')">
+                                Lihat semua
+                            </button>
+
+                        </div>
+
+                        <div id="upcomingSchedules"
+                             class="empty-state">
+
+                            <div class="empty-icon">
+                                ◷
+                            </div>
+
+                            <strong>
+                                Belum ada jadwal
+                            </strong>
+
+                            <span>
+                                Jadwal proyek akan muncul di sini.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PEMBAYARAN -->
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+                                <h3>Pembayaran Customer Terbaru</h3>
+                                <span>
+                                    Pemasukan customer ke kita
+                                </span>
+                            </div>
+
+                            <button
+                                class="text-button"
+                                onclick="showPage('payments')">
+                                Lihat semua
+                            </button>
+
+                        </div>
+
+                        <div id="recentPayments"
+                             class="empty-state">
+
+                            <div class="empty-icon">
+                                Rp
+                            </div>
+
+                            <strong>
+                                Belum ada transaksi
+                            </strong>
+
+                            <span>
+                                Pembayaran klien akan muncul di sini.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="panel finance-report-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h3>Laporan Keuangan</h3>
+                            <span>Pemasukan customer dan pengeluaran pembayaran vendor.</span>
+                        </div>
+                        <button class="primary-button" type="button" onclick="exportFinanceCSV()">Download CSV</button>
+                    </div>
+                    <div class="report-filters">
+                        <label>Tahun <select id="financeYear" onchange="renderFinanceReport()"></select></label>
+                        <label>Dari <input type="date" id="financeStart" onchange="renderFinanceReport()"></label>
+                        <label>Sampai <input type="date" id="financeEnd" onchange="renderFinanceReport()"></label>
+                        <button class="secondary-button" type="button" onclick="clearFinanceDates()">Semua tanggal</button>
+                    </div>
+                    <div class="finance-summary">
+                        <div><span>Pemasukan</span><strong id="financeIncome">Rp. 0</strong></div>
+                        <div><span>Pengeluaran</span><strong id="financeExpense">Rp. 0</strong></div>
+                        <div><span>Saldo Bersih</span><strong id="financeNet">Rp. 0</strong></div>
+                        <div><span>Utang Vendor</span><strong id="dashboardVendorDebt">Rp. 0</strong></div>
+                    </div>
+                    <div id="financeChart" class="finance-chart"></div>
+                </div>
+
+            </div>
+
+
+            <!-- =====================
+                 KLIEN
+            ====================== -->
+
+<div id="clients" class="page">
+
+    <div class="page-header">
+
+        <div>
+            <h2>Data Klien</h2>
+
+            <p>
+                Kelola data klien dan informasi acara.
+            </p>
+        </div>
+
+        <button
+            class="primary-button"
+            onclick="openClientModal()">
+            + Tambah Klien
+        </button>
+
+    </div>
+
+
+    <!-- SEARCH & STATUS FILTER -->
+
+    <div class="panel client-toolbar">
+
+        <div class="filter-tabs" id="clientStatusTabs">
+            <button class="filter-tab active" type="button" onclick="setClientStatusFilter('aktif')">Aktif</button>
+            <button class="filter-tab" type="button" onclick="setClientStatusFilter('all')">Semua</button>
+            <button class="filter-tab" type="button" onclick="setClientStatusFilter('selesai')">Selesai</button>
+            <button class="filter-tab" type="button" onclick="setClientStatusFilter('cancel')">Cancel</button>
+        </div>
+
+        <div class="search-box">
+
+            <span>⌕</span>
+
+            <input
+                type="text"
+                id="clientSearch"
+                placeholder="Cari nama klien, acara, atau nomor HP..."
+                oninput="renderClients()">
+
+        </div>
+
+    </div>
+
+
+    <!-- DATA CLIENT -->
+
+    <div class="panel">
+
+        <div class="table-wrapper">
+
+            <table class="data-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Klien</th>
+                        <th>Acara</th>
+                        <th>Tanggal</th>
+                        <th>Lokasi</th>
+                        <th>No. HP</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="clientsTableBody"></tbody>
+
+            </table>
+
+        </div>
+
+
+        <div
+            id="clientsEmpty"
+            class="empty-state">
+
+            <div class="empty-icon">
+                ♙
+            </div>
+
+            <strong>
+                Belum ada data klien
+            </strong>
+
+            <span>
+                Tambahkan klien pertama kamu.
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================
+     CLIENT MODAL
+====================== -->
+
+<div
+    id="clientModal"
+    class="modal-overlay">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h3 id="clientModalTitle">
+                    Tambah Klien
+                </h3>
+
+                <span>
+                    Masukkan informasi klien dan acara.
+                </span>
+            </div>
+
+            <button
+                class="modal-close"
+                onclick="closeClientModal()">
+                ×
+            </button>
+
+        </div>
+
+
+        <form
+            id="clientForm"
+            onsubmit="saveClient(event)">
+
+            <input
+                type="hidden"
+                id="clientId">
+
+
+            <div class="form-grid">
+
+
+                <!-- NAMA -->
+
+                <div class="form-group full">
+
+                    <label>
+                        Nama Klien *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="clientName"
+                        placeholder="Contoh: Rafi & Aisyah"
+                        required>
+
+                </div>
+
+
+                <!-- HP -->
+
+                <div class="form-group">
+
+                    <label>
+                        No. HP *
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="clientPhone"
+                        placeholder="08xxxxxxxxxx"
+                        required>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="clientEmail"
+                        placeholder="email@contoh.com">
+
+                </div>
+
+
+                <!-- ACARA -->
+
+                <div class="form-group">
+
+                    <label>
+                        Nama Acara *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="clientEvent"
+                        placeholder="Contoh: Wedding"
+                        required>
+
+                </div>
+
+
+                <!-- TANGGAL -->
+
+                <div class="form-group">
+
+                    <label>
+                        Tanggal Acara *
+                    </label>
+
+                    <input
+                        type="date"
+                        id="clientEventDate"
+                        required>
+
+                </div>
+
+
+                <!-- LOKASI -->
+
+                <div class="form-group full">
+
+                    <label>
+                        Lokasi Acara *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="clientLocation"
+                        placeholder="Nama gedung / lokasi"
+                        required>
+
+                </div>
+
+
+                <!-- ALAMAT -->
+
+                <div class="form-group full">
+
+                    <label>
+                        Alamat Klien
+                    </label>
+
+                    <textarea
+                        id="clientAddress"
+                        rows="3"
+                        placeholder="Alamat klien"></textarea>
+
+                </div>
+
+
+                <!-- PIC -->
+
+                <div class="form-group">
+
+                    <label>
+                        PIC
+                    </label>
+
+                    <input
+                        type="text"
+                        id="clientPIC"
+                        placeholder="Nama PIC">
+
+                </div>
+
+
+                <!-- STATUS ACARA -->
+
+                <div class="form-group">
+
+                    <label>
+                        Status Acara
+                    </label>
+
+                    <select id="clientStatus">
+                        <option value="aktif">Aktif / Berjalan</option>
+                        <option value="selesai">Selesai Acara</option>
+                        <option value="cancel">Cancel</option>
+                    </select>
+
+                </div>
+
+
+                <!-- CATATAN -->
+
+                <div class="form-group">
+
+                    <label>
+                        Catatan
+                    </label>
+
+                    <input
+                        type="text"
+                        id="clientNotes"
+                        placeholder="Catatan tambahan">
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="closeClientModal()">
+                    Batal
+                </button>
+
+                <button
+                    type="submit"
+                    class="primary-button">
+                    Simpan Klien
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+            <!-- =====================
+                 PROYEK
+            ====================== -->
+
+<div id="projects" class="page">
+
+    <div class="page-header">
+
+        <div>
+            <h2>Proyek</h2>
+
+            <p>
+                Kelola paket, harga, pembayaran,
+                dan pekerjaan setiap proyek.
+            </p>
+        </div>
+
+        <button
+            class="primary-button"
+            onclick="openProjectModal()">
+
+            + Tambah Proyek
+
+        </button>
+
+    </div>
+
+
+    <!-- SEARCH & STATUS FILTER -->
+
+    <div class="panel client-toolbar">
+
+        <div class="filter-tabs" id="projectStatusTabs">
+            <button class="filter-tab active" type="button" onclick="setProjectStatusFilter('aktif')">Aktif</button>
+            <button class="filter-tab" type="button" onclick="setProjectStatusFilter('all')">Semua</button>
+            <button class="filter-tab" type="button" onclick="setProjectStatusFilter('selesai')">Selesai</button>
+            <button class="filter-tab" type="button" onclick="setProjectStatusFilter('cancel')">Cancel</button>
+        </div>
+
+        <div class="search-box">
+
+            <span>⌕</span>
+
+            <input
+                type="text"
+                id="projectSearch"
+                placeholder="Cari proyek, klien, atau paket..."
+                oninput="renderProjects()">
+
+        </div>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div class="panel">
+
+        <div class="table-wrapper">
+
+            <table class="data-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Proyek</th>
+
+                        <th>Klien</th>
+
+                        <th>Paket</th>
+
+                        <th>Total</th>
+
+                        <th>Terbayar</th>
+
+                        <th>Sisa</th>
+
+                        <th>Status Bayar</th>
+
+                        <th>Status Acara</th>
+
+                        <th>Aksi</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="projectsTableBody"></tbody>
+
+            </table>
+
+        </div>
+
+
+        <div
+            id="projectsEmpty"
+            class="empty-state">
+
+            <div class="empty-icon">
+                ▣
+            </div>
+
+            <strong>
+                Belum ada proyek
+            </strong>
+
+            <span>
+                Tambahkan proyek pertama kamu.
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================
+     PROJECT MODAL
+====================== -->
+
+<div
+    id="projectModal"
+    class="modal-overlay">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h3 id="projectModalTitle">
+                    Tambah Proyek
+                </h3>
+
+                <span>
+                    Masukkan informasi proyek,
+                    paket, additional, diskon dan pembayaran.
+                </span>
+
+            </div>
+
+            <button
+                class="modal-close"
+                onclick="closeProjectModal()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <form
+            id="projectForm"
+            onsubmit="saveProject(event)">
+
+            <input
+                type="hidden"
+                id="projectId">
+
+
+            <div class="form-grid">
+
+
+                <!-- KLIEN -->
+
+                <div class="form-group full">
+
+                    <label>
+                        Klien *
+                    </label>
+
+                    <select
+                        id="projectClient"
+                        onchange="onProjectClientChange()"
+                        required>
+
+                        <option value="">
+                            Pilih Klien
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- NAMA PROYEK -->
+
+                <div class="form-group">
+
+                    <label>
+                        Nama Proyek *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="projectName"
+                        placeholder="Contoh: Wedding Rafi & Aisyah"
+                        required>
+
+                </div>
+
+
+                <!-- NAMA ACARA -->
+
+                <div class="form-group">
+
+                    <label>
+                        Jenis Acara
+                    </label>
+
+                    <input
+                        type="text"
+                        id="projectEvent"
+                        placeholder="Wedding / Birthday / Event">
+
+                </div>
+
+
+                <!-- STATUS ACARA -->
+
+                <div class="form-group">
+
+                    <label>
+                        Status Acara
+                    </label>
+
+                    <select id="projectEventStatus">
+                        <option value="aktif">Aktif / Berjalan</option>
+                        <option value="selesai">Selesai Acara</option>
+                        <option value="cancel">Cancel</option>
+                    </select>
+
+                </div>
+
+
+                <!-- MULTI PAKET -->
+
+                <div class="form-group full">
+                    <div class="section-label-row">
+                        <label>Paket yang Dipilih *</label>
+                        <button type="button" class="secondary-button btn-small" onclick="addProjectPackageRow()">+ Tambah Paket</button>
+                    </div>
+                    <div id="projectPackagesContainer" class="additional-container"></div>
+                    <small class="field-hint">Pilih satu atau beberapa paket. Harga dasar tampil otomatis dan tetap dapat disesuaikan.</small>
+                </div>
+
+
+                <!-- ADDITIONAL ITEMS -->
+
+                <div class="form-group full">
+
+                    <div class="section-label-row">
+                        <label>Additional / Penambahan Item (Opsional)</label>
+                        <button type="button" class="secondary-button btn-small" onclick="addProjectAdditionalRow()">+ Tambah Item</button>
+                    </div>
+
+                    <div id="projectAdditionalContainer" class="additional-container"></div>
+
+                </div>
+
+
+                <!-- DISKON KESELURUHAN -->
+
+                <div class="form-group full project-discount-group">
+
+                    <label>
+                        Total Diskon / Potongan Keseluruhan
+                    </label>
+
+                    <div class="currency-input">
+                        <span>Rp</span>
+                        <input
+                            type="text"
+                            inputmode="numeric"
+                            id="projectDiscount"
+                            placeholder="0"
+                            oninput="calculateProjectModalTotal()">
+                    </div>
+
+                    <small class="field-hint">Diskon ini mengurangi total seluruh paket dan additional.</small>
+
+                </div>
+
+
+                <!-- RINGKASAN TOTAL -->
+
+                <div class="form-group full">
+
+                    <div class="price-summary-box">
+                        <div class="summary-line"><span>Harga Paket:</span><strong id="projectSummaryPackage">Rp. 0</strong></div>
+                        <div class="summary-line"><span>Total Additional:</span><strong id="projectSummaryAdditional">+ Rp. 0</strong></div>
+                        <div class="summary-line"><span>Diskon:</span><strong id="projectSummaryDiscount">- Rp. 0</strong></div>
+                        <div class="summary-line total-line"><span>Total Biaya Proyek:</span><strong id="projectSummaryTotal">Rp. 0</strong></div>
+                    </div>
+
+                    <input type="hidden" id="projectTotal">
+                    <input type="hidden" id="projectPackage">
+                    <input type="hidden" id="projectPackagePrice">
+
+                </div>
+
+
+                <!-- INCLUDE OTOMATIS -->
+
+                <div class="form-group full">
+
+                    <label>
+                        Include / Isi Paket
+                    </label>
+
+                    <textarea
+                        id="projectPackageIncludes"
+                        rows="5"
+                        readonly
+                        placeholder="Fasilitas dari paket yang dipilih akan muncul otomatis di sini."></textarea>
+
+                </div>
+
+                <div class="form-group full">
+
+                    <label>
+                        Include Additional
+                    </label>
+
+                    <textarea
+                        id="projectAdditionalIncludes"
+                        rows="4"
+                        readonly
+                        placeholder="Additional yang ditambahkan akan muncul otomatis di sini."></textarea>
+
+                </div>
+
+
+                <!-- CATATAN -->
+
+                <div class="form-group full">
+
+                    <label>
+                        Catatan Proyek
+                    </label>
+
+                    <input
+                        type="text"
+                        id="projectNotes"
+                        placeholder="Catatan tambahan proyek">
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="closeProjectModal()">
+
+                    Batal
+
+                </button>
+
+                <button
+                    type="submit"
+                    class="primary-button">
+
+                    Simpan Proyek
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+<!-- =====================
+     PEMBAYARAN
+====================== -->
+
+<div id="payments" class="page">
+
+    <div class="page-header">
+
+        <div>
+            <h2>Pembayaran Klien</h2>
+
+            <p>
+                Catat DP, cicilan, dan pelunasan dari setiap klien.
+            </p>
+        </div>
+
+        <button
+            class="primary-button"
+            onclick="openPaymentModal()">
+
+            + Tambah Pembayaran
+
+        </button>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="stats-grid payment-stats">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                Rp
+            </div>
+
+            <div>
+
+                <span>Total Pembayaran</span>
+
+                <strong id="paymentTotal">
+                    Rp. 0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                D
+            </div>
+
+            <div>
+
+                <span>Total DP</span>
+
+                <strong id="paymentDP">
+                    Rp. 0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                C
+            </div>
+
+            <div>
+
+                <span>Total Cicilan</span>
+
+                <strong id="paymentInstallment">
+                    Rp. 0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                L
+            </div>
+
+            <div>
+
+                <span>Total Pelunasan</span>
+
+                <strong id="paymentSettlement">
+                    Rp. 0
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="panel client-toolbar">
+
+        <div class="search-box">
+
+            <span>⌕</span>
+
+            <input
+                type="text"
+                id="paymentSearch"
+                placeholder="Cari proyek, klien, atau jenis pembayaran..."
+                oninput="renderPayments()">
+
+        </div>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div class="panel">
+
+        <div class="table-wrapper">
+
+            <table class="data-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Tanggal</th>
+
+                        <th>Proyek</th>
+
+                        <th>Klien</th>
+
+                        <th>Jenis</th>
+
+                        <th>Nominal</th>
+
+                        <th>Metode</th>
+
+                        <th>Bukti</th>
+
+                        <th>Keterangan</th>
+
+                        <th>Aksi</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="paymentsTableBody"></tbody>
+
+            </table>
+
+        </div>
+
+
+        <div
+            id="paymentsEmpty"
+            class="empty-state">
+
+            <div class="empty-icon">
+                Rp
+            </div>
+
+            <strong>
+                Belum ada pembayaran
+            </strong>
+
+            <span>
+                Tambahkan pembayaran pertama.
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================
+     PAYMENT MODAL
+====================== -->
+
+<div
+    id="paymentModal"
+    class="modal-overlay">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h3 id="paymentModalTitle">
+                    Tambah Pembayaran
+                </h3>
+
+                <span>
+                    Catat transaksi pembayaran klien.
+                </span>
+
+            </div>
+
+            <button
+                class="modal-close"
+                onclick="closePaymentModal()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <form
+            id="paymentForm"
+            onsubmit="savePayment(event)">
+
+            <input
+                type="hidden"
+                id="paymentId">
+
+
+            <div class="form-grid">
+
+
+                <!-- PROYEK -->
+
+                <div class="form-group full">
+
+                    <label>
+                        Proyek *
+                    </label>
+
+                    <select
+                        id="paymentProject"
+                        onchange="updatePaymentAmountState()"
+                        required>
+
+                        <option value="">
+                            Pilih Proyek
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- TANGGAL -->
+
+                <div class="form-group">
+
+                    <label>
+                        Tanggal Pembayaran *
+                    </label>
+
+                    <input
+                        type="date"
+                        id="paymentDate"
+                        required>
+
+                </div>
+
+
+                <!-- JENIS -->
+
+                <div class="form-group">
+
+                    <label>
+                        Jenis Pembayaran *
+                    </label>
+
+                    <select
+                        id="paymentType"
+                        onchange="updatePaymentAmountState()"
+                        required>
+
+                        <option value="">
+                            Pilih Jenis
+                        </option>
+
+                        <option value="DP">
+                            DP
+                        </option>
+
+                        <option value="Cicilan">
+                            Cicilan
+                        </option>
+
+                        <option value="Pelunasan">
+                            Pelunasan
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- NOMINAL -->
+
+                <div class="form-group">
+
+                    <label>
+                        Nominal *
+                    </label>
+
+                    <div class="currency-input">
+                        <span>Rp</span>
+                        <input
+                            type="text"
+                            inputmode="numeric"
+                            id="paymentAmount"
+                            placeholder="0"
+                            min="0"
+                            required>
+                    </div>
+
+                </div>
+
+
+                <!-- METODE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Metode Pembayaran
+                    </label>
+
+                    <select id="paymentMethod">
+
+                        <option value="">
+                            Pilih Metode
+                        </option>
+
+                        <option value="Transfer">
+                            Transfer
+                        </option>
+
+                        <option value="Cash">
+                            Cash
+                        </option>
+
+                        <option value="QRIS">
+                            QRIS
+                        </option>
+
+                        <option value="Debit">
+                            Debit
+                        </option>
+
+                        <option value="Lainnya">
+                            Lainnya
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- BUKTI -->
+
+                <div class="form-group full">
+                    <label for="paymentProof">Bukti Pembayaran</label>
+                    <input type="file" id="paymentProof" accept="image/*,.pdf" required>
+                    <small class="field-hint">Upload foto atau PDF bukti transfer.</small>
+                </div>
+
+
+                <!-- KETERANGAN -->
+
+                <div class="form-group full">
+
+                    <label>
+                        Keterangan
+                    </label>
+
+                    <textarea
+                        id="paymentNotes"
+                        rows="3"
+                        placeholder="Contoh: DP tahap pertama sesuai invoice INV-001"></textarea>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="closePaymentModal()">
+
+                    Batal
+
+                </button>
+
+                <button
+                    type="submit"
+                    class="primary-button">
+
+                    Simpan Pembayaran
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+            <!-- =====================
+                 VENDOR
+            ====================== -->
+
+            <div id="vendors" class="page">
+
+                <div class="page-header">
+
+                    <div>
+                        <h2>Vendor</h2>
+
+                        <p>
+                            Kelola vendor yang terlibat dalam proyek.
+                        </p>
+                    </div>
+
+                    <button class="primary-button" onclick="openVendorModal()">
+                        + Tambah Vendor
+                    </button>
+
+                </div>
+
+                <div class="stats-grid vendor-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">◆</div>
+                        <div><span>Total Vendor</span><strong id="totalVendors">0</strong></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">Rp</div>
+                        <div><span>Total Modal Vendor</span><strong id="totalVendorCost">Rp. 0</strong></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">!</div>
+                        <div><span>Sisa Kewajiban</span><strong id="totalVendorRemaining">Rp. 0</strong></div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Vendor</th>
+                                    <th>Proyek</th>
+                                    <th>Total Modal</th>
+                                    <th>Terbayar</th>
+                                    <th>Sisa</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vendorsTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="vendorsEmpty" class="empty-state">
+
+                        <div class="empty-icon">
+                            ◆
+                        </div>
+
+                        <strong>
+                            Belum ada vendor
+                        </strong>
+
+                        <span>
+                            Vendor proyek akan muncul di sini.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================
+                 VENDOR MODAL
+            ====================== -->
+
+            <div id="vendorModal" class="modal-overlay">
+                <div class="modal">
+                    <div class="modal-header">
+                        <div>
+                            <h3 id="vendorModalTitle">Tambah Vendor</h3>
+                            <span>Hubungkan vendor dengan proyek dan catat modalnya.</span>
+                        </div>
+                        <button class="modal-close" type="button" onclick="closeVendorModal()">×</button>
+                    </div>
+
+                    <form id="vendorForm" onsubmit="saveVendor(event)">
+                        <input type="hidden" id="vendorId">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="vendorName">Nama Vendor *</label>
+                                <select id="vendorName" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="vendorProject">Proyek *</label>
+                                <select id="vendorProject" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="vendorCost">Total Modal *</label>
+                                <div class="currency-input">
+                                    <span>Rp</span>
+                                    <input type="text" inputmode="numeric" id="vendorCost" placeholder="5.000.000" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="vendorType">Jenis Item Vendor *</label>
+                                <select id="vendorType" required>
+                                    <option value="utama">Utama</option>
+                                    <option value="additional">Additional</option>
+                                </select>
+                            </div>
+                            <div class="form-group full">
+                                <label for="vendorNotes">Deskripsi Pekerjaan / Barang *</label>
+                                <textarea id="vendorNotes" rows="3" placeholder="Tulis apa saja yang dikerjakan atau disediakan vendor" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="secondary-button" onclick="closeVendorModal()">Batal</button>
+                            <button type="submit" class="primary-button">Simpan Vendor</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+            <div id="vendorPaymentModal" class="modal-overlay">
+                <div class="modal">
+                    <div class="modal-header">
+                        <div>
+                            <h3 id="vendorPaymentModalTitle">Tambah Pembayaran Vendor</h3>
+                            <span>Catat setiap DP, cicilan, atau pelunasan ke vendor.</span>
+                        </div>
+                        <button class="modal-close" type="button" onclick="closeVendorPaymentModal()">×</button>
+                    </div>
+
+                    <form id="vendorPaymentForm" onsubmit="saveVendorPayment(event)">
+                        <input type="hidden" id="vendorPaymentId">
+                        <input type="hidden" id="vendorPaymentVendor">
+                        <div class="form-grid">
+                            <div class="form-group full">
+                                <label for="vendorPaymentVendorName">Vendor</label>
+                                <input type="text" id="vendorPaymentVendorName" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="vendorPaymentDate">Tanggal Pembayaran *</label>
+                                <input type="date" id="vendorPaymentDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="vendorPaymentType">Jenis Pembayaran *</label>
+                                <select id="vendorPaymentType" required>
+                                    <option value="">Pilih Jenis</option>
+                                    <option value="DP">DP</option>
+                                    <option value="Cicilan">Cicilan</option>
+                                    <option value="Pelunasan">Pelunasan</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="vendorPaymentAmount">Nominal *</label>
+                                <div class="currency-input">
+                                    <span>Rp</span>
+                                    <input type="text" inputmode="numeric" id="vendorPaymentAmount" placeholder="0" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="vendorPaymentMethod">Metode Pembayaran</label>
+                                <select id="vendorPaymentMethod">
+                                    <option value="">Pilih Metode</option>
+                                    <option value="Transfer">Transfer</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="QRIS">QRIS</option>
+                                </select>
+                            </div>
+                            <div class="form-group full">
+                                <label for="vendorPaymentProof">Bukti Pembayaran *</label>
+                                <input type="file" id="vendorPaymentProof" accept="image/*,.pdf" required>
+                                <small class="field-hint">Upload foto atau PDF bukti pembayaran.</small>
+                            </div>
+                            <div class="form-group full">
+                                <label for="vendorPaymentNotes">Keterangan</label>
+                                <textarea id="vendorPaymentNotes" rows="2" placeholder="Contoh: DP tahap pertama"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="secondary-button" onclick="closeVendorPaymentModal()">Batal</button>
+                            <button type="submit" class="primary-button">Simpan Pembayaran</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+            <div id="vendorHistoryModal" class="modal-overlay">
+                <div class="modal modal-wide">
+                    <div class="modal-header">
+                        <div>
+                            <h3 id="vendorHistoryTitle">Riwayat Vendor</h3>
+                            <span>Riwayat pembayaran dan bukti transaksi vendor ini.</span>
+                        </div>
+                        <button class="modal-close" type="button" onclick="closeVendorHistoryModal()">×</button>
+                    </div>
+                    <div class="table-wrapper vendor-history-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Jenis</th>
+                                    <th>Nominal</th>
+                                    <th>Metode</th>
+                                    <th>Bukti</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vendorHistoryTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div id="vendorHistoryEmpty" class="empty-state">
+                        <div class="empty-icon">Rp</div>
+                        <strong>Belum ada riwayat pembayaran</strong>
+                        <span>Tambahkan pembayaran vendor terlebih dahulu.</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- =====================
+                 INVOICE
+            ====================== -->
+
+            <div id="invoices" class="page">
+
+                <div class="page-header">
+
+                    <div>
+                        <h2>Invoice</h2>
+
+                        <p>
+                            Kelola invoice otomatis, rincian pesanan, dan tagihan klien.
+                        </p>
+                    </div>
+
+
+                </div>
+
+                <!-- STATS CARDS -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Total Invoice</span>
+                        <strong class="stat-value" id="totalInvoicesCount">0</strong>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Invoice Lunas</span>
+                        <strong class="stat-value text-success" id="totalInvoicesPaidCount">0</strong>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Belum Lunas</span>
+                        <strong class="stat-value text-warning" id="totalInvoicesUnpaidCount">0</strong>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Total Nilai Tagihan</span>
+                        <strong class="stat-value" id="totalInvoicesAmount">Rp. 0</strong>
+                    </div>
+                </div>
+
+                <!-- SEARCH & FILTER -->
+                <div class="panel client-toolbar">
+                    <div class="filter-tabs" id="invoiceStatusTabs">
+                        <button class="filter-tab active" type="button" onclick="setInvoiceStatusFilter('all')">Semua</button>
+                        <button class="filter-tab" type="button" onclick="setInvoiceStatusFilter('lunas')">Lunas</button>
+                        <button class="filter-tab" type="button" onclick="setInvoiceStatusFilter('sebagian')">Sebagian</button>
+                        <button class="filter-tab" type="button" onclick="setInvoiceStatusFilter('belum')">Belum Bayar</button>
+                    </div>
+
+                    <div class="search-box">
+                        <span>⌕</span>
+                        <input
+                            type="text"
+                            id="invoiceSearch"
+                            placeholder="Cari nomor invoice, klien, atau proyek..."
+                            oninput="renderInvoices()">
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>No. Invoice</th>
+                                    <th>Proyek</th>
+                                    <th>Klien</th>
+                                    <th>Tanggal</th>
+                                    <th>Jatuh Tempo</th>
+                                    <th>Total</th>
+                                    <th>Terbayar</th>
+                                    <th>Sisa</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoicesTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="invoicesEmpty" class="empty-state">
+                        <div class="empty-icon">▤</div>
+                        <strong>Belum ada invoice</strong>
+                    <span>Invoice akan muncul otomatis setelah proyek dibuat.</span>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- =====================
+                 JADWAL (GOOGLE CALENDAR)
+            ====================== -->
+
+            <div id="schedules" class="page">
+
+                <div class="page-header">
+
+                    <div>
+                        <h2>Jadwal & Kalender</h2>
+
+                        <p>
+                            Survey, fitting, technical meeting, loading dekor, dan agenda acara.
+                        </p>
+                    </div>
+
+                    <div class="header-actions">
+                        <div class="view-toggle">
+                            <button class="toggle-btn active" id="btnViewCalendar" onclick="switchScheduleView('calendar')">📅 Kalender</button>
+                            <button class="toggle-btn" id="btnViewList" onclick="switchScheduleView('list')">📋 Daftar</button>
+                        </div>
+                        <button class="primary-button" onclick="openScheduleModal()">
+                            + Tambah Jadwal
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- CALENDAR TOOLBAR -->
+                <div class="panel calendar-toolbar">
+                    <div class="calendar-nav">
+                        <button class="secondary-button btn-icon" onclick="prevCalendarMonth()" title="Bulan Sebelumnya">‹</button>
+                        <button class="secondary-button" onclick="todayCalendarMonth()">Hari Ini</button>
+                        <button class="secondary-button btn-icon" onclick="nextCalendarMonth()" title="Bulan Selanjutnya">›</button>
+                        <h3 id="calendarMonthTitle" class="calendar-month-title">Bulan Tahun</h3>
+                    </div>
+
+                    <div class="calendar-filter">
+                        <select id="scheduleTypeFilter" onchange="renderScheduleViews()">
+                            <option value="all">Semua Agenda</option>
+                            <option value="project">Acara Proyek</option>
+                            <option value="manual">Selain Acara Proyek</option>
+                        </select>
+                        <select id="calendarProjectFilter" onchange="renderCalendar()">
+                            <option value="">Semua Proyek</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- CALENDAR GRID VIEW -->
+                <div class="panel calendar-panel" id="calendarView">
+                    <div class="calendar-weekdays">
+                        <div>Sen</div>
+                        <div>Sel</div>
+                        <div>Rab</div>
+                        <div>Kam</div>
+                        <div>Jum</div>
+                        <div>Sab</div>
+                        <div>Min</div>
+                    </div>
+                    <div class="calendar-days" id="calendarDays"></div>
+                </div>
+
+                <!-- SCHEDULE LIST VIEW (ALTERNATIVE) -->
+                <div class="panel" id="scheduleListView" style="display: none;">
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal & Waktu</th>
+                                    <th>Agenda</th>
+                                    <th>Proyek</th>
+                                    <th>Kategori</th>
+                                    <th>Lokasi</th>
+                                    <th>Checklist Tugas</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="schedulesTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="schedulesEmpty" class="empty-state">
+                        <div class="empty-icon">◷</div>
+                        <strong>Belum ada jadwal</strong>
+                        <span>Tambahkan agenda pekerjaan pertama kamu.</span>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- =====================
+                 CHECKLIST
+            ====================== -->
+
+            <div id="checklist" class="page">
+
+                <div class="page-header">
+
+                    <div>
+                        <h2>Checklist Pekerjaan</h2>
+
+                        <p>
+                            Pantau pekerjaan yang harus diselesaikan dan progres setiap agenda.
+                        </p>
+                    </div>
+
+
+                </div>
+
+                <!-- CHECKLIST OVERVIEW PROGRESS -->
+                <div class="panel checklist-overview-panel">
+                    <div class="checklist-overview-header">
+                        <div>
+                            <h3>Progres Pekerjaan Keseluruhan</h3>
+                            <span id="checklistOverviewSubtitle">0 dari 0 tugas selesai</span>
+                        </div>
+                        <span class="checklist-percent-badge" id="checklistOverviewPercent">0%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="checklistProgressBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <!-- TOOLBAR FILTER -->
+                <div class="panel client-toolbar">
+                    <div class="filter-tabs" id="checklistStatusTabs">
+                        <button class="filter-tab active" type="button" onclick="setChecklistStatusFilter('all')">Semua</button>
+                        <button class="filter-tab" type="button" onclick="setChecklistStatusFilter('pending')">Belum Selesai</button>
+                        <button class="filter-tab" type="button" onclick="setChecklistStatusFilter('completed')">Selesai</button>
+                    </div>
+
+                    <div class="calendar-filter">
+                        <select id="checklistProjectFilter" onchange="renderChecklists()">
+                            <option value="">Semua Proyek</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- CHECKLIST CARDS CONTAINER -->
+                <div id="checklistCardsContainer" class="checklist-grid"></div>
+
+                <div id="checklistsEmpty" class="panel empty-state">
+                    <div class="empty-icon">✓</div>
+                    <strong>Belum ada checklist</strong>
+                    <span>Checklist dibuat otomatis dari setiap agenda yang ditambahkan di menu Jadwal.</span>
+                </div>
+
+            </div>
+
+
+            <!-- =====================
+                 SETTING
+            ====================== -->
+
+            <div id="settings" class="page">
+
+                <div class="page-header">
+
+                    <div>
+                        <h2>Setting</h2>
+                        <p>Kelola paket layanan yang tersedia untuk klien.</p>
+                    </div>
+
+                    <button class="primary-button" onclick="openPackageModal()">
+                        + Tambah Paket
+                    </button>
+
+                </div>
+
+                <div class="settings-tabs" role="tablist" aria-label="Pengaturan">
+                    <button class="settings-tab active" type="button">Paket Tersedia</button>
+                    <button class="primary-button" type="button" onclick="openVendorMasterModal()">+ Tambah Nama Vendor</button>
+                </div>
+
+                <div class="settings-toolbar">
+                    <div class="search-box">
+                        <span>⌕</span>
+                        <input type="search" id="packageSearch" placeholder="Cari nama paket atau fasilitas..." oninput="renderPackages()">
+                    </div>
+                    <span class="package-count" id="packageCount">0 paket</span>
+                </div>
+
+                <div id="packagesGrid" class="packages-grid"></div>
+
+                <div id="packagesEmpty" class="panel empty-state">
+                    <div class="empty-icon">▤</div>
+                    <strong>Belum ada paket tersedia</strong>
+                    <span>Tambahkan paket layanan pertama kamu.</span>
+                </div>
+
+                <div class="panel vendor-master-panel">
+                    <div class="panel-header"><div><h3>Daftar Nama Vendor</h3><span>Daftar ini dipakai sebagai pilihan pada menu Vendor.</span></div></div>
+                    <div id="vendorMasterList" class="vendor-master-list"></div>
+                    <div id="vendorMasterEmpty" class="empty-state"><strong>Belum ada nama vendor</strong><span>Tambahkan vendor langganan terlebih dahulu.</span></div>
+                </div>
+
+            </div>
+
+
+            <!-- =====================
+                 PACKAGE MODAL
+            ====================== -->
+
+            <div id="packageModal" class="modal-overlay">
+                <div class="modal">
+                    <div class="modal-header">
+                        <div>
+                            <h3 id="packageModalTitle">Tambah Paket</h3>
+                            <span>Masukkan detail paket layanan untuk klien.</span>
+                        </div>
+                        <button class="modal-close" type="button" onclick="closePackageModal()">×</button>
+                    </div>
+
+                    <form id="packageForm" onsubmit="savePackage(event)">
+                        <input type="hidden" id="packageId">
+                        <div class="form-grid">
+                            <div class="form-group full">
+                                <label for="packageName">Nama Paket *</label>
+                                <input type="text" id="packageName" placeholder="Contoh: Paket Intimate" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="packagePrice">Harga *</label>
+                                <div class="currency-input">
+                                    <span>Rp</span>
+                                    <input type="text" inputmode="numeric" id="packagePrice" placeholder="15.000.000" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="packageCapacity">Kapasitas Tamu</label>
+                                <input type="number" id="packageCapacity" min="0" placeholder="300">
+                            </div>
+
+                            <div class="form-group full">
+                                <label for="packageDescription">Deskripsi</label>
+                                <textarea id="packageDescription" rows="2" placeholder="Deskripsi singkat paket"></textarea>
+                            </div>
+
+                            <div class="form-group full">
+                                <label for="packageServices">Fasilitas *</label>
+                                <textarea id="packageServices" rows="4" placeholder="Dekorasi pelaminan, Catering 300 pax, Dokumentasi&#10;Satu fasilitas per baris" required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="secondary-button" onclick="closePackageModal()">Batal</button>
+                            <button type="submit" class="primary-button">Simpan Paket</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="vendorMasterModal" class="modal-overlay">
+                <div class="modal">
+                    <div class="modal-header">
+                        <div><h3 id="vendorMasterModalTitle">Tambah Nama Vendor</h3><span>Simpan vendor agar dapat dipilih tanpa mengetik ulang.</span></div>
+                        <button class="modal-close" type="button" onclick="closeVendorMasterModal()">×</button>
+                    </div>
+                    <form id="vendorMasterForm" onsubmit="saveVendorMaster(event)">
+                        <input type="hidden" id="vendorMasterId">
+                        <div class="form-grid">
+                            <div class="form-group full"><label for="vendorMasterName">Nama Vendor *</label><input id="vendorMasterName" type="text" required placeholder="Contoh: Dekorasi Mawar"></div>
+                            <div class="form-group"><label for="vendorMasterCategory">Kategori</label><input id="vendorMasterCategory" type="text" placeholder="Dekorasi / MUA / Catering"></div>
+                            <div class="form-group"><label for="vendorMasterContact">Kontak</label><input id="vendorMasterContact" type="text" placeholder="Nomor WhatsApp"></div>
+                        </div>
+                        <div class="modal-footer"><button type="button" class="secondary-button" onclick="closeVendorMasterModal()">Batal</button><button type="submit" class="primary-button">Simpan Vendor</button></div>
+                    </form>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <div id="projectPaymentHistoryModal" class="modal-overlay">
+        <div class="modal modal-wide">
+            <div class="modal-header">
+                <div><h3 id="projectPaymentHistoryTitle">Riwayat Pembayaran Customer</h3><span>Semua pembayaran customer untuk proyek ini.</span></div>
+                <button class="modal-close" type="button" onclick="closeProjectPaymentHistory()">×</button>
+            </div>
+            <div class="table-wrapper"><table class="data-table"><thead><tr><th>Tanggal</th><th>Jenis</th><th>Nominal</th><th>Bukti</th><th>Keterangan</th></tr></thead><tbody id="projectPaymentHistoryBody"></tbody></table></div>
+            <div id="projectPaymentHistoryEmpty" class="empty-state"><strong>Belum ada pembayaran customer</strong></div>
+        </div>
+    </div>
+
+
+    <!-- =====================
+         INVOICE MODAL (FORM)
+    ====================== -->
+    <div id="invoiceModal" class="modal-overlay">
+        <div class="modal modal-wide">
+            <div class="modal-header">
+                <div>
+                    <h3 id="invoiceModalTitle">Edit Invoice</h3>
+                    <span>Atur jatuh tempo dan informasi pembayaran invoice.</span>
+                </div>
+                <button class="modal-close" type="button" onclick="closeInvoiceModal()">×</button>
+            </div>
+
+            <form id="invoiceForm" onsubmit="saveInvoice(event)">
+                <input type="hidden" id="invoiceId">
+
+                <div class="form-grid">
+                    <!-- PILIH PROYEK -->
+                    <div class="form-group full">
+                        <label for="invoiceProject">Pilih Proyek / Acara *</label>
+                        <select id="invoiceProject" onchange="onInvoiceProjectChange()" required>
+                            <option value="">Pilih Proyek</option>
+                        </select>
+                    </div>
+
+                    <!-- NO INVOICE -->
+                    <div class="form-group">
+                        <label for="invoiceNumber">Nomor Invoice *</label>
+                        <input type="text" id="invoiceNumber" placeholder="INV-202608-001" required>
+                    </div>
+
+                    <!-- TANGGAL INVOICE -->
+                    <div class="form-group">
+                        <label for="invoiceDate">Tanggal Invoice *</label>
+                        <input type="date" id="invoiceDate" required>
+                    </div>
+
+                    <!-- JATUH TEMPO -->
+                    <div class="form-group">
+                        <label for="invoiceDueDate">Jatuh Tempo</label>
+                        <input type="date" id="invoiceDueDate">
+                    </div>
+
+                    <!-- INFO KLIEN OTOMATIS -->
+                    <div class="form-group full">
+                        <div class="invoice-client-preview" id="invoiceClientPreview">
+                            <span>Pilih proyek untuk memuat data klien, paket, dan rincian pesanan.</span>
+                        </div>
+                    </div>
+
+                    <!-- RINCIAN HARGA OTOMATIS -->
+                    <div class="form-group full">
+                        <div class="price-summary-box" id="invoicePricePreview">
+                            <div class="summary-line"><span>Harga Paket:</span><strong id="invSummaryPackage">Rp. 0</strong></div>
+                            <div class="summary-line"><span>Total Additional:</span><strong id="invSummaryAdditional">+ Rp. 0</strong></div>
+                            <div class="summary-line"><span>Diskon:</span><strong id="invSummaryDiscount">- Rp. 0</strong></div>
+                            <div class="summary-line total-line"><span>Total Tagihan:</span><strong id="invSummaryTotal">Rp. 0</strong></div>
+                            <div class="summary-line"><span>Telah Dibayar:</span><strong class="text-success" id="invSummaryPaid">Rp. 0</strong></div>
+                            <div class="summary-line remaining-line"><span>Sisa Tagihan:</span><strong class="text-danger" id="invSummaryRemaining">Rp. 0</strong></div>
+                        </div>
+                    </div>
+
+                    <!-- REKENING & PEMBAYARAN -->
+                    <div class="form-group full">
+                        <label for="invoiceBankInfo">Info Pembayaran / Rekening Transfer</label>
+                        <input type="text" id="invoiceBankInfo" placeholder="BCA 123456789 a.n. Wedding Organizer / Mandiri 987654321">
+                    </div>
+
+                    <!-- CATATAN INVOICE -->
+                    <div class="form-group full">
+                        <label for="invoiceNotes">Catatan / Syarat Ketentuan</label>
+                        <textarea id="invoiceNotes" rows="2" placeholder="Harap melakukan konfirmasi setelah melakukan transfer."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="secondary-button" onclick="closeInvoiceModal()">Batal</button>
+                    <button type="submit" class="primary-button">Simpan Invoice</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- =====================
+         INVOICE VIEW / PRINT MODAL
+    ====================== -->
+    <div id="invoiceViewModal" class="modal-overlay">
+        <div class="modal modal-sheet">
+            <div class="modal-header modal-no-print">
+                <div>
+                    <h3>Preview Invoice</h3>
+                    <span>Tampilan dokumen invoice siap cetak / PDF.</span>
+                </div>
+                <div class="modal-header-actions">
+                    <button type="button" class="primary-button" onclick="downloadInvoicePDF()">Download PDF</button>
+                    <button class="modal-close" type="button" onclick="closeInvoiceViewModal()">×</button>
+                </div>
+            </div>
+
+            <!-- PRINTABLE SHEET -->
+            <div class="invoice-sheet" id="invoicePrintArea">
+                <!-- DYNAMICALLY POPULATED -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- =====================
+         SCHEDULE MODAL (FORM)
+    ====================== -->
+    <div id="scheduleModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div>
+                    <h3 id="scheduleModalTitle">Tambah Jadwal</h3>
+                    <span>Atur agenda, survey, fitting, atau meeting proyek.</span>
+                </div>
+                <button class="modal-close" type="button" onclick="closeScheduleModal()">×</button>
+            </div>
+
+            <form id="scheduleForm" onsubmit="saveSchedule(event)">
+                <input type="hidden" id="scheduleId">
+
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label for="scheduleTitle">Judul Agenda / Pekerjaan *</label>
+                        <input type="text" id="scheduleTitle" placeholder="Contoh: Technical Meeting Vendor Dekorasi" required>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="scheduleProject">Proyek Terkait (Opsional)</label>
+                        <select id="scheduleProject">
+                            <option value="">Tanpa proyek / agenda umum</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scheduleDate">Tanggal *</label>
+                        <input type="date" id="scheduleDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scheduleTime">Waktu</label>
+                        <input type="time" id="scheduleTime" value="10:00">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scheduleCategory">Kategori</label>
+                        <select id="scheduleCategory">
+                            <option value="Survey">Survey Lokasi</option>
+                            <option value="Fitting">Fitting Baju</option>
+                            <option value="Meeting">Technical Meeting</option>
+                            <option value="Vendor">Koordinasi Vendor</option>
+                            <option value="Dekorasi">Loading / Dekorasi</option>
+                            <option value="Acara">Hari H / Resepsi</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scheduleLocation">Lokasi</label>
+                        <input type="text" id="scheduleLocation" placeholder="Contoh: Grand Ballroom / Butik MUA">
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="scheduleNotes">Catatan Tambahan</label>
+                        <input type="text" id="scheduleNotes" placeholder="Catatan atau instruksi khusus">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="secondary-button" onclick="closeScheduleModal()">Batal</button>
+                    <button type="submit" class="primary-button">Simpan Jadwal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+
+</body>
+</html>
