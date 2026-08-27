@@ -2064,6 +2064,117 @@ body {
     padding: 14px 20px;
 }
 
+.filter-select-group {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-select {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filter-select > span {
+    padding-left: 2px;
+    color: #64748b;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .055em;
+    text-transform: uppercase;
+}
+
+.filter-select-control {
+    position: relative;
+}
+
+.filter-select-control::after {
+    content: "⌄";
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1;
+    pointer-events: none;
+    transform: translateY(-58%);
+}
+
+.filter-select select {
+    min-width: 175px;
+    min-height: 39px;
+    appearance: none;
+    border: 1px solid #dbe1e8;
+    border-radius: 10px;
+    padding: 8px 36px 8px 12px;
+    outline: none;
+    background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+    color: #1e293b;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+.filter-select select:hover {
+    border-color: #b9c3cf;
+    background: #fff;
+}
+
+.filter-select select:focus {
+    border-color: #64748b;
+    box-shadow: 0 0 0 3px rgba(100, 116, 139, .12);
+}
+
+.checklist-project-select select {
+    min-width: 230px;
+}
+
+.schedule-list-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #eef2f6;
+}
+
+.schedule-list-heading div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.schedule-list-heading span {
+    color: #94a3b8;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+
+.schedule-list-heading strong {
+    color: #1e293b;
+    font-size: 13px;
+}
+
+.schedule-list-heading small {
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: #eef2f6;
+    color: #475569;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+#btnCalendarToday.active-period {
+    border-color: #111827;
+    background: #111827;
+    color: #fff;
+}
+
 .calendar-nav {
     display: flex;
     align-items: center;
@@ -2383,6 +2494,31 @@ body {
     padding: 23px;
 }
 
+.checklist-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+}
+
+.checklist-delete-button {
+    border: 1px solid #fecaca;
+    border-radius: 7px;
+    padding: 5px 8px;
+    background: #fff7f7;
+    color: #dc2626;
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease;
+}
+
+.checklist-delete-button:hover {
+    border-color: #fca5a5;
+    background: #fee2e2;
+}
+
 /* Connected workflow additions */
 .project-package-row,
 .project-additional-row {
@@ -2506,5 +2642,27 @@ body {
 
     .invoice-doc-header {
         flex-direction: column;
+    }
+
+    .calendar-toolbar,
+    .calendar-nav,
+    .filter-select-group {
+        align-items: stretch;
+    }
+
+    .calendar-nav {
+        flex-wrap: wrap;
+    }
+
+    .filter-select-group,
+    .filter-select,
+    .filter-select-control,
+    .filter-select select {
+        width: 100%;
+    }
+
+    .calendar-month-title {
+        width: 100%;
+        margin: 4px 0 0;
     }
 }

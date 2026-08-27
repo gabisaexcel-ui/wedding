@@ -3072,6 +3072,7 @@ let projectStatusFilter = "aktif";
 let invoiceStatusFilter = "all";
 let checklistStatusFilter = "all";
 let calendarCursor = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+let currentScheduleView = "calendar";
 
 function normalizeConnectedData() {
     appData.vendorCatalog = Array.isArray(appData.vendorCatalog) ? appData.vendorCatalog : [];
@@ -3769,16 +3770,28 @@ function getProjectEventSchedules() {
     return appData.projects.map(project => { const client = appData.clients.find(item => item.id === project.clientId); return { id: `event_${project.id}`, projectId: project.id, title: project.name, date: client?.eventDate || "", time: "", category: "Acara Proyek", location: client?.location || "", source: "project", completed: project.eventStatus === "selesai" }; }).filter(item => item.date);
 }
 function getAllSchedules() { return [...getProjectEventSchedules(), ...appData.schedules.map(item => ({ ...item, source: "manual" }))]; }
+function getLocalDateKey(date = new Date()) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
 function updateScheduleProjectDropdown(selected = "") {
     const select = document.getElementById("scheduleProject"); if (!select) return;
     select.innerHTML = `<option value="">Tanpa proyek / agenda umum</option>${appData.projects.map(project => `<option value="${project.id}" ${project.id === selected ? "selected" : ""}>${escapeHTML(project.name)}</option>`).join("")}`;
 }
 function updateScheduleFilters() {
-    ["calendarProjectFilter", "checklistProjectFilter"].forEach(id => { const select = document.getElementById(id); if (!select) return; const selected = select.value; select.innerHTML = `<option value="">Semua Proyek</option>${appData.projects.map(project => `<option value="${project.id}">${escapeHTML(project.name)}</option>`).join("")}`; select.value = selected; });
+    ["calendarProjectFilter", "checklistProjectFilter"].forEach(id => {
+        const select = document.getElementById(id);
+        if (!select) return;
+        const selected = select.value;
+        select.innerHTML = `<option value="">Semua proyek</option>${appData.projects.map(project => {
+            const client = appData.clients.find(item => item.id === project.clientId);
+            return `<option value="${project.id}">${escapeHTML(project.name)}${client?.name ? ` — ${escapeHTML(client.name)}` : ""}</option>`;
+        }).join("")}`;
+        select.value = selected;
+    });
 }
 function openScheduleModal(scheduleId = null) {
     const form = document.getElementById("scheduleForm"); form?.reset(); const schedule = scheduleId ? appData.schedules.find(item => item.id === scheduleId) : null;
-    document.getElementById("scheduleId").value = schedule?.id || ""; updateScheduleProjectDropdown(schedule?.projectId || ""); document.getElementById("scheduleTitle").value = schedule?.title || ""; document.getElementById("scheduleDate").value = schedule?.date || new Date().toISOString().slice(0, 10); document.getElementById("scheduleTime").value = schedule?.time || "10:00"; document.getElementById("scheduleCategory").value = schedule?.category || "Lainnya"; document.getElementById("scheduleLocation").value = schedule?.location || ""; document.getElementById("scheduleNotes").value = schedule?.notes || ""; document.getElementById("scheduleModalTitle").textContent = schedule ? "Edit Jadwal" : "Tambah Jadwal"; document.getElementById("scheduleModal")?.classList.add("show");
+    document.getElementById("scheduleId").value = schedule?.id || ""; updateScheduleProjectDropdown(schedule?.projectId || ""); document.getElementById("scheduleTitle").value = schedule?.title || ""; document.getElementById("scheduleDate").value = schedule?.date || getLocalDateKey(); document.getElementById("scheduleTime").value = schedule?.time || "10:00"; document.getElementById("scheduleCategory").value = schedule?.category || "Lainnya"; document.getElementById("scheduleLocation").value = schedule?.location || ""; document.getElementById("scheduleNotes").value = schedule?.notes || ""; document.getElementById("scheduleModalTitle").textContent = schedule ? "Edit Jadwal" : "Tambah Jadwal"; document.getElementById("scheduleModal")?.classList.add("show");
 }
 function closeScheduleModal() { document.getElementById("scheduleModal")?.classList.remove("show"); }
 function saveSchedule(event) {
@@ -3790,29 +3803,67 @@ function saveSchedule(event) {
 function deleteSchedule(id) { const item = appData.schedules.find(schedule => schedule.id === id); if (!item || !confirm(`Hapus jadwal "${item.title}"?`)) return; appData.schedules = appData.schedules.filter(schedule => schedule.id !== id); saveData(STORAGE_KEYS.schedules, appData.schedules); renderScheduleViews(); renderChecklists(); }
 function getFilteredSchedules() {
     const source = document.getElementById("scheduleTypeFilter")?.value || "all", projectId = document.getElementById("calendarProjectFilter")?.value || "";
-    return getAllSchedules().filter(item => (source === "all" || item.source === source) && (!projectId || item.projectId === projectId));
+    const monthKey = `${calendarCursor.getFullYear()}-${String(calendarCursor.getMonth() + 1).padStart(2, "0")}`;
+    return getAllSchedules().filter(item =>
+        (source === "all" || item.source === source) &&
+        (!projectId || item.projectId === projectId) &&
+        String(item.date || "").startsWith(monthKey)
+    );
 }
-function renderScheduleViews() { updateScheduleFilters(); renderCalendar(); renderSchedulesList(); }
-function switchScheduleView(view) { document.getElementById("calendarView").style.display = view === "calendar" ? "block" : "none"; document.getElementById("scheduleListView").style.display = view === "list" ? "block" : "none"; document.getElementById("btnViewCalendar")?.classList.toggle("active", view === "calendar"); document.getElementById("btnViewList")?.classList.toggle("active", view === "list"); if (view === "list") renderSchedulesList(); else renderCalendar(); }
-function prevCalendarMonth() { calendarCursor.setMonth(calendarCursor.getMonth() - 1); renderCalendar(); }
-function nextCalendarMonth() { calendarCursor.setMonth(calendarCursor.getMonth() + 1); renderCalendar(); }
-function todayCalendarMonth() { calendarCursor = new Date(new Date().getFullYear(), new Date().getMonth(), 1); renderCalendar(); }
+function renderScheduleViews() {
+    updateScheduleFilters();
+    renderCalendar();
+    renderSchedulesList();
+    const calendar = document.getElementById("calendarView");
+    const list = document.getElementById("scheduleListView");
+    if (calendar) calendar.style.display = currentScheduleView === "calendar" ? "block" : "none";
+    if (list) list.style.display = currentScheduleView === "list" ? "block" : "none";
+    document.getElementById("btnViewCalendar")?.classList.toggle("active", currentScheduleView === "calendar");
+    document.getElementById("btnViewList")?.classList.toggle("active", currentScheduleView === "list");
+}
+function switchScheduleView(view) {
+    currentScheduleView = view === "list" ? "list" : "calendar";
+    renderScheduleViews();
+}
+function prevCalendarMonth() {
+    calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() - 1, 1);
+    renderScheduleViews();
+}
+function nextCalendarMonth() {
+    calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + 1, 1);
+    renderScheduleViews();
+}
+function todayCalendarMonth() {
+    const today = new Date();
+    calendarCursor = new Date(today.getFullYear(), today.getMonth(), 1);
+    renderScheduleViews();
+}
 function renderCalendar() {
     const grid = document.getElementById("calendarDays"), title = document.getElementById("calendarMonthTitle"); if (!grid) return;
     const year = calendarCursor.getFullYear(), month = calendarCursor.getMonth(), first = new Date(year, month, 1), offset = (first.getDay() + 6) % 7, start = new Date(year, month, 1 - offset), schedules = getFilteredSchedules();
     if (title) title.textContent = calendarCursor.toLocaleDateString("id-ID", { month: "long", year: "numeric" });
-    grid.innerHTML = Array.from({ length: 42 }, (_, index) => { const date = new Date(start); date.setDate(start.getDate() + index); const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`, today = new Date().toISOString().slice(0, 10), events = schedules.filter(item => item.date === key); return `<div class="calendar-day ${date.getMonth() !== month ? "other-month" : ""} ${key === today ? "today" : ""}"><div class="calendar-day-header"><span class="calendar-day-number">${date.getDate()}</span></div>${events.slice(0, 3).map(item => `<button class="calendar-event ${item.source}" onclick="${item.source === "manual" ? `openScheduleModal('${item.id}')` : `openProjectModal('${item.projectId}')`}">${escapeHTML(item.time ? `${item.time} ${item.title}` : item.title)}</button>`).join("")}${events.length > 3 ? `<span class="calendar-more">+${events.length - 3} lainnya</span>` : ""}</div>`; }).join("");
+    const now = new Date();
+    document.getElementById("btnCalendarToday")?.classList.toggle("active-period", year === now.getFullYear() && month === now.getMonth());
+    grid.innerHTML = Array.from({ length: 42 }, (_, index) => { const date = new Date(start); date.setDate(start.getDate() + index); const key = getLocalDateKey(date), today = getLocalDateKey(), events = schedules.filter(item => item.date === key); return `<div class="calendar-day ${date.getMonth() !== month ? "other-month" : ""} ${key === today ? "today" : ""}"><div class="calendar-day-header"><span class="calendar-day-number">${date.getDate()}</span></div>${events.slice(0, 3).map(item => `<button class="calendar-event ${item.source}" onclick="${item.source === "manual" ? `openScheduleModal('${item.id}')` : `openProjectModal('${item.projectId}')`}">${escapeHTML(item.time ? `${item.time} ${item.title}` : item.title)}</button>`).join("")}${events.length > 3 ? `<span class="calendar-more">+${events.length - 3} lainnya</span>` : ""}</div>`; }).join("");
 }
 function renderSchedulesList() {
     const body = document.getElementById("schedulesTableBody"), empty = document.getElementById("schedulesEmpty"); if (!body) return; const schedules = getFilteredSchedules().sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`));
-    body.innerHTML = schedules.map(item => { const project = appData.projects.find(p => p.id === item.projectId); return `<tr><td>${formatDate(item.date)}${item.time ? `<span class="client-sub">${escapeHTML(item.time)}</span>` : ""}</td><td><strong>${escapeHTML(item.title)}</strong></td><td>${escapeHTML(project?.name || "Agenda umum")}</td><td><span class="status-badge ${item.source === "project" ? "lunas" : "proses"}">${item.source === "project" ? "Acara Proyek" : escapeHTML(item.category || "Agenda")}</span></td><td>${escapeHTML(item.location || "-")}</td><td>${item.source === "manual" ? "1 agenda" : "Agenda proyek"}</td><td><span class="status-badge ${item.completed ? "lunas" : "belum"}">${item.completed ? "Selesai" : "Belum"}</span></td><td><div class="table-actions">${item.source === "manual" ? `<button class="action-button" onclick="openScheduleModal('${item.id}')">Edit</button><button class="action-button delete" onclick="deleteSchedule('${item.id}')">Hapus</button>` : `<button class="action-button" onclick="openProjectModal('${item.projectId}')">Buka Proyek</button>`}</div></td></tr>`; }).join(""); if (empty) empty.style.display = schedules.length ? "none" : "flex";
+    body.innerHTML = schedules.map(item => { const project = appData.projects.find(p => p.id === item.projectId); return `<tr><td>${formatDate(item.date)}${item.time ? `<span class="client-sub">${escapeHTML(item.time)}</span>` : ""}</td><td><strong>${escapeHTML(item.title)}</strong></td><td>${escapeHTML(project?.name || "Agenda umum")}</td><td><span class="status-badge ${item.source === "project" ? "lunas" : "proses"}">${item.source === "project" ? "Acara Proyek" : escapeHTML(item.category || "Agenda")}</span></td><td>${escapeHTML(item.location || "-")}</td><td>${item.source === "manual" ? "1 agenda" : "Agenda proyek"}</td><td><span class="status-badge ${item.completed ? "lunas" : "belum"}">${item.completed ? "Selesai" : "Belum"}</span></td><td><div class="table-actions">${item.source === "manual" ? `<button class="action-button" onclick="openScheduleModal('${item.id}')">Edit</button><button class="action-button delete" onclick="deleteSchedule('${item.id}')">Hapus</button>` : `<button class="action-button" onclick="openProjectModal('${item.projectId}')">Buka Proyek</button>`}</div></td></tr>`; }).join("");
+    const periodLabel = calendarCursor.toLocaleDateString("id-ID", { month: "long", year: "numeric" });
+    if (document.getElementById("scheduleListPeriod")) document.getElementById("scheduleListPeriod").textContent = periodLabel;
+    if (document.getElementById("scheduleListCount")) document.getElementById("scheduleListCount").textContent = `${schedules.length} agenda`;
+    if (empty) {
+        empty.style.display = schedules.length ? "none" : "flex";
+        const emptyText = empty.querySelector("span");
+        if (emptyText) emptyText.textContent = `Tidak ada agenda pada ${periodLabel}.`;
+    }
 }
 function setChecklistStatusFilter(status) { checklistStatusFilter = status; document.querySelectorAll("#checklistStatusTabs .filter-tab").forEach(button => button.classList.toggle("active", button.getAttribute("onclick")?.includes(`'${status}'`))); renderChecklists(); }
 function toggleScheduleChecklist(id, checked) { const schedule = appData.schedules.find(item => item.id === id); if (!schedule) return; schedule.completed = checked; schedule.completedAt = checked ? new Date().toISOString() : ""; saveData(STORAGE_KEYS.schedules, appData.schedules); renderChecklists(); renderScheduleViews(); }
 function renderChecklists() {
     updateScheduleFilters(); const container = document.getElementById("checklistCardsContainer"), empty = document.getElementById("checklistsEmpty"); if (!container) return; const projectId = document.getElementById("checklistProjectFilter")?.value || "";
     const items = appData.schedules.filter(item => (!projectId || item.projectId === projectId) && (checklistStatusFilter === "all" || (checklistStatusFilter === "completed") === Boolean(item.completed))).sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`));
-    container.innerHTML = items.map(item => { const project = appData.projects.find(p => p.id === item.projectId); return `<article class="checklist-card"><div class="checklist-card-header"><div class="checklist-card-title"><h4>${escapeHTML(item.title)}</h4><span>${formatDate(item.date)}${item.time ? ` · ${escapeHTML(item.time)}` : ""} · ${escapeHTML(project?.name || "Agenda umum")}</span></div><span class="status-badge ${item.completed ? "lunas" : "belum"}">${item.completed ? "Selesai" : "Belum"}</span></div><label class="checklist-task-item ${item.completed ? "completed" : ""}"><input type="checkbox" ${item.completed ? "checked" : ""} onchange="toggleScheduleChecklist('${item.id}', this.checked)"><span class="checklist-task-title">${escapeHTML(item.title)}</span></label></article>`; }).join("");
+    container.innerHTML = items.map(item => { const project = appData.projects.find(p => p.id === item.projectId); return `<article class="checklist-card"><div class="checklist-card-header"><div class="checklist-card-title"><h4>${escapeHTML(item.title)}</h4><span>${formatDate(item.date)}${item.time ? ` · ${escapeHTML(item.time)}` : ""} · ${escapeHTML(project?.name || "Agenda umum")}</span></div><div class="checklist-card-actions"><span class="status-badge ${item.completed ? "lunas" : "belum"}">${item.completed ? "Selesai" : "Belum"}</span><button type="button" class="checklist-delete-button" onclick="deleteSchedule('${item.id}')">Hapus</button></div></div><label class="checklist-task-item ${item.completed ? "completed" : ""}"><input type="checkbox" ${item.completed ? "checked" : ""} onchange="toggleScheduleChecklist('${item.id}', this.checked)"><span class="checklist-task-title">${escapeHTML(item.title)}</span></label></article>`; }).join("");
     const total = appData.schedules.length, done = appData.schedules.filter(item => item.completed).length, percent = total ? Math.round(done / total * 100) : 0; document.getElementById("checklistOverviewSubtitle").textContent = `${done} dari ${total} agenda selesai`; document.getElementById("checklistOverviewPercent").textContent = `${percent}%`; document.getElementById("checklistProgressBar").style.width = `${percent}%`; if (empty) empty.style.display = items.length ? "none" : "flex";
 }
 

@@ -1823,20 +1823,30 @@
                 <div class="panel calendar-toolbar">
                     <div class="calendar-nav">
                         <button class="secondary-button btn-icon" onclick="prevCalendarMonth()" title="Bulan Sebelumnya">‹</button>
-                        <button class="secondary-button" onclick="todayCalendarMonth()">Hari Ini</button>
+                        <button class="secondary-button" id="btnCalendarToday" onclick="todayCalendarMonth()">Hari Ini</button>
                         <button class="secondary-button btn-icon" onclick="nextCalendarMonth()" title="Bulan Selanjutnya">›</button>
                         <h3 id="calendarMonthTitle" class="calendar-month-title">Bulan Tahun</h3>
                     </div>
 
-                    <div class="calendar-filter">
-                        <select id="scheduleTypeFilter" onchange="renderScheduleViews()">
-                            <option value="all">Semua Agenda</option>
-                            <option value="project">Acara Proyek</option>
-                            <option value="manual">Selain Acara Proyek</option>
-                        </select>
-                        <select id="calendarProjectFilter" onchange="renderCalendar()">
-                            <option value="">Semua Proyek</option>
-                        </select>
+                    <div class="calendar-filter filter-select-group">
+                        <label class="filter-select">
+                            <span>Jenis Agenda</span>
+                            <div class="filter-select-control">
+                                <select id="scheduleTypeFilter" onchange="renderScheduleViews()">
+                                    <option value="all">Semua agenda</option>
+                                    <option value="project">Acara proyek</option>
+                                    <option value="manual">Agenda tambahan</option>
+                                </select>
+                            </div>
+                        </label>
+                        <label class="filter-select">
+                            <span>Proyek</span>
+                            <div class="filter-select-control">
+                                <select id="calendarProjectFilter" onchange="renderScheduleViews()">
+                                    <option value="">Semua proyek</option>
+                                </select>
+                            </div>
+                        </label>
                     </div>
                 </div>
 
@@ -1856,6 +1866,10 @@
 
                 <!-- SCHEDULE LIST VIEW (ALTERNATIVE) -->
                 <div class="panel" id="scheduleListView" style="display: none;">
+                    <div class="schedule-list-heading">
+                        <div><span>PERIODE</span><strong id="scheduleListPeriod">Bulan Tahun</strong></div>
+                        <small id="scheduleListCount">0 agenda</small>
+                    </div>
                     <div class="table-wrapper">
                         <table class="data-table">
                             <thead>
@@ -1925,10 +1939,15 @@
                         <button class="filter-tab" type="button" onclick="setChecklistStatusFilter('completed')">Selesai</button>
                     </div>
 
-                    <div class="calendar-filter">
-                        <select id="checklistProjectFilter" onchange="renderChecklists()">
-                            <option value="">Semua Proyek</option>
-                        </select>
+                    <div class="calendar-filter filter-select-group">
+                        <label class="filter-select checklist-project-select">
+                            <span>Filter Proyek</span>
+                            <div class="filter-select-control">
+                                <select id="checklistProjectFilter" onchange="renderChecklists()">
+                                    <option value="">Semua proyek</option>
+                                </select>
+                            </div>
+                        </label>
                     </div>
                 </div>
 
