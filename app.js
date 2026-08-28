@@ -876,6 +876,64 @@ function updateDashboard() {
 
 }
 
+function openDashboardDetail(type) {
+    const modal = document.getElementById("dashboardDetailModal");
+    const title = document.getElementById("dashboardDetailTitle");
+    const subtitle = document.getElementById("dashboardDetailSubtitle");
+    const content = document.getElementById("dashboardDetailContent");
+    if (!modal || !title || !subtitle || !content) return;
+
+    const configs = {
+        clients: { title: "Total Klien", subtitle: "Daftar klien dan informasi acara" },
+        projects: { title: "Total Proyek", subtitle: "Daftar proyek yang tercatat" },
+        payments: { title: "Pembayaran Klien", subtitle: "Riwayat pembayaran yang masuk" },
+        receivables: { title: "Piutang", subtitle: "Pembayaran proyek yang belum lunas" }
+    };
+    const config = configs[type];
+    if (!config) return;
+    title.textContent = config.title;
+    subtitle.textContent = config.subtitle;
+
+    let cards = [];
+    if (type === "clients") {
+        cards = appData.clients.map(client => `
+            <article class="dashboard-detail-card">
+                <strong>${escapeHTML(client.name || "Tanpa nama")}</strong>
+                <div class="detail-card-grid">
+                    <span><b>Acara</b>${escapeHTML(client.event || "-")}</span>
+                    <span><b>Tanggal</b>${client.eventDate ? formatDate(client.eventDate) : "-"}</span>
+                    <span><b>Lokasi</b>${escapeHTML(client.location || "-")}</span>
+                    <span><b>No. HP</b>${escapeHTML(client.phone || "-")}</span>
+                    <span><b>Status</b><em class="status-badge ${(client.status || "aktif") === "selesai" ? "lunas" : (client.status || "aktif") === "cancel" ? "belum" : "proses"}">${escapeHTML(client.status || "aktif")}</em></span>
+                </div>
+            </article>`);
+    } else if (type === "projects") {
+        cards = appData.projects.map(project => {
+            const client = appData.clients.find(item => item.id === project.clientId);
+            return `<article class="dashboard-detail-card"><strong>${escapeHTML(project.name || "Tanpa nama")}</strong><div class="detail-card-grid"><span><b>Klien</b>${escapeHTML(client?.name || "-")}</span><span><b>Paket</b>${escapeHTML(project.package || getProjectPackages(project).map(item => item.name).join(", ") || "-")}</span><span><b>Total Proyek</b>${formatRupiah(project.total)}</span></div></article>`;
+        });
+    } else if (type === "payments") {
+        cards = appData.payments.map(payment => {
+            const project = appData.projects.find(item => item.id === payment.projectId);
+            const client = appData.clients.find(item => item.id === project?.clientId);
+            return `<article class="dashboard-detail-card"><strong>${escapeHTML(project?.name || "Proyek tidak ditemukan")}</strong><div class="detail-card-grid"><span><b>Tgl Bayar</b>${payment.date ? formatDate(payment.date) : "-"}</span><span><b>Klien</b>${escapeHTML(client?.name || "-")}</span><span><b>Jenis</b>${escapeHTML(payment.type || "-")}</span><span><b>Nominal</b>${formatRupiah(payment.amount)}</span><span><b>Metode</b>${escapeHTML(payment.method || "-")}</span><span><b>Bukti</b>${payment.proof ? "Tersedia" : "-"}</span></div></article>`;
+        });
+    } else {
+        cards = appData.projects.map(project => {
+            const remaining = Math.max((Number(project.total) || 0) - getProjectPaid(project), 0);
+            if (!remaining) return "";
+            const client = appData.clients.find(item => item.id === project.clientId);
+            return `<article class="dashboard-detail-card"><strong>${escapeHTML(client?.name || "Tanpa klien")}</strong><div class="detail-card-grid"><span><b>Proyek</b>${escapeHTML(project.name || "-")}</span><span><b>Paket</b>${escapeHTML(project.package || "-")}</span><span><b>Total Proyek</b>${formatRupiah(project.total)}</span><span><b>Total Bayar</b>${formatRupiah(getProjectPaid(project))}</span><span><b>Sisa Bayar</b><strong class="text-danger">${formatRupiah(remaining)}</strong></span></div></article>`;
+        }).filter(Boolean);
+    }
+    content.innerHTML = cards.length ? cards.join("") : `<div class="empty-state"><strong>Belum ada data</strong><span>Data akan muncul setelah ditambahkan.</span></div>`;
+    modal.classList.add("show");
+}
+
+function closeDashboardDetail() {
+    document.getElementById("dashboardDetailModal")?.classList.remove("show");
+}
+
 
 /* =========================================================
    UPCOMING SCHEDULES
@@ -3221,12 +3279,18 @@ function calculateProjectModalTotal() {
     const additionalTotal = [...document.querySelectorAll(".additional-price")].reduce((sum, input) => sum + parseRupiah(input.value), 0);
     const discount = getCurrencyInputValue("projectDiscount");
     const total = Math.max(packageTotal + additionalTotal - discount, 0);
+    const projectId = document.getElementById("projectId")?.value;
+    const project = appData.projects.find(item => item.id === projectId);
+    const paid = project ? getProjectPaid(project) : 0;
+    const remaining = Math.max(total - paid, 0);
     const hidden = document.getElementById("projectTotal");
     if (hidden) hidden.value = total;
     if (document.getElementById("projectSummaryPackage")) document.getElementById("projectSummaryPackage").textContent = formatRupiah(packageTotal);
     if (document.getElementById("projectSummaryAdditional")) document.getElementById("projectSummaryAdditional").textContent = `+ ${formatRupiah(additionalTotal)}`;
     if (document.getElementById("projectSummaryDiscount")) document.getElementById("projectSummaryDiscount").textContent = `- ${formatRupiah(discount)}`;
     if (document.getElementById("projectSummaryTotal")) document.getElementById("projectSummaryTotal").textContent = formatRupiah(total);
+    if (document.getElementById("projectSummaryPaid")) document.getElementById("projectSummaryPaid").textContent = formatRupiah(paid);
+    if (document.getElementById("projectSummaryRemaining")) document.getElementById("projectSummaryRemaining").textContent = formatRupiah(remaining);
     updateProjectIncludes();
     return total;
 }

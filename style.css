@@ -430,6 +430,19 @@ body {
     box-shadow: var(--shadow);
 }
 
+.stat-card-clickable {
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card-clickable:hover,
+.stat-card-clickable:focus-visible {
+    border-color: #c9ced7;
+    box-shadow: 0 8px 24px rgba(17, 24, 39, 0.1);
+    outline: none;
+    transform: translateY(-2px);
+}
+
 .stat-icon {
     width: 43px;
     height: 43px;
@@ -984,6 +997,57 @@ body {
 
 .modal-wide {
     max-width: 900px;
+}
+
+.dashboard-detail-content {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 20px 23px 23px;
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+.dashboard-detail-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    background: #fbfcfd;
+}
+
+.dashboard-detail-card > strong {
+    display: block;
+    margin-bottom: 13px;
+    font-size: 13px;
+}
+
+.detail-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px 16px;
+}
+
+.detail-card-grid span {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    color: var(--text);
+    font-size: 11px;
+}
+
+.detail-card-grid b {
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.text-success { color: var(--success); }
+.text-danger { color: var(--danger); }
+
+.remaining-line {
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
 }
 
 .vendor-history-wrapper {
@@ -2664,5 +2728,265 @@ body {
     .calendar-month-title {
         width: 100%;
         margin: 4px 0 0;
+    }
+}
+
+/* Vendor page mobile layout */
+@media (max-width: 750px) {
+    #vendors .vendor-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px;
+    }
+
+    #vendors .stat-card {
+        min-width: 0;
+        padding: 14px;
+        gap: 11px;
+    }
+
+    #vendors .stat-card > div:last-child {
+        min-width: 0;
+    }
+
+    #vendors .stat-card span {
+        margin: 0;
+        line-height: 1.35;
+        white-space: normal;
+    }
+
+    #vendors .stat-card strong {
+        margin-top: 3px;
+        overflow-wrap: anywhere;
+        font-size: 15px;
+        line-height: 1.25;
+    }
+
+    #vendors > .panel {
+        overflow: visible;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    #vendors .table-wrapper {
+        overflow: visible;
+    }
+
+    #vendors .data-table,
+    #vendors .data-table tbody,
+    #vendors .data-table tr,
+    #vendors .data-table td {
+        display: block;
+        width: 100%;
+    }
+
+    #vendors .data-table thead {
+        display: none;
+    }
+
+    #vendors .data-table tbody {
+        display: grid;
+        gap: 12px;
+    }
+
+    #vendors .data-table tbody tr {
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        border-radius: 13px;
+        background: #fff;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, .045);
+    }
+
+    #vendors .data-table tbody tr:hover {
+        background: #fff;
+    }
+
+    #vendors .data-table td {
+        padding: 10px 14px;
+        border-bottom: 1px solid #f1f5f9;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    #vendors .data-table td::before {
+        display: block;
+        margin-bottom: 4px;
+        color: #94a3b8;
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+    }
+
+    #vendors .data-table td:nth-child(1)::before { content: "Vendor"; }
+    #vendors .data-table td:nth-child(2)::before { content: "Proyek"; }
+    #vendors .data-table td:nth-child(3)::before { content: "Total Modal"; }
+    #vendors .data-table td:nth-child(4)::before { content: "Terbayar"; }
+    #vendors .data-table td:nth-child(5)::before { content: "Sisa"; }
+
+    #vendors .data-table td:last-child {
+        padding: 12px 14px 14px;
+        border-bottom: 0;
+    }
+
+    #vendors .data-table td:last-child::before {
+        content: none;
+    }
+
+    #vendors .table-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    #vendors .table-actions .action-button {
+        width: 100%;
+        min-width: 0;
+        padding: 8px 6px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 520px) {
+    #vendors .vendor-stats {
+        grid-template-columns: 1fr !important;
+    }
+
+    #vendors .stat-card {
+        min-height: 72px;
+    }
+
+    #vendors .stat-icon {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* Checklist page mobile layout */
+@media (max-width: 750px) {
+    .dashboard-detail-content {
+        grid-template-columns: 1fr !important;
+        padding: 16px;
+    }
+
+    .detail-card-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    #checklist {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    #checklist .checklist-grid {
+        width: 100%;
+        min-width: 0;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+
+    #checklist .checklist-card {
+        width: 100%;
+        min-width: 0;
+        padding: 14px;
+    }
+
+    #checklist .checklist-card-header {
+        min-width: 0;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    #checklist .checklist-card-title {
+        min-width: 0;
+        flex: 1 1 135px;
+    }
+
+    #checklist .checklist-card-title h4,
+    #checklist .checklist-card-title span,
+    #checklist .checklist-task-title {
+        overflow-wrap: anywhere;
+    }
+
+    #checklist .checklist-card-actions {
+        min-width: 0;
+        margin-left: auto;
+    }
+
+    #checklist .checklist-task-item {
+        min-width: 0;
+    }
+
+    #checklist .client-toolbar {
+        width: 100%;
+        min-width: 0;
+        padding: 10px;
+    }
+
+    #checklist .filter-tabs {
+        display: grid;
+        width: 100%;
+        min-width: 0;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 3px;
+        overflow: hidden;
+    }
+
+    #checklist .filter-tab {
+        min-width: 0;
+        padding: 7px 3px;
+        overflow: hidden;
+        font-size: 9px;
+        text-overflow: ellipsis;
+    }
+
+    #checklist .calendar-filter,
+    #checklist .filter-select-group,
+    #checklist .filter-select,
+    #checklist .filter-select-control,
+    #checklist .filter-select select {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    #checklist .checklist-overview-panel {
+        width: 100%;
+        min-width: 0;
+        padding: 16px;
+    }
+
+    #checklist .checklist-overview-header {
+        min-width: 0;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 420px) {
+    #checklist .checklist-card-header {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    #checklist .checklist-card-title {
+        width: 100%;
+        flex: 0 1 auto;
+    }
+
+    #checklist .checklist-card-actions {
+        width: 100%;
+        margin-left: 0;
+        justify-content: space-between;
+    }
+
+    #checklist .checklist-card {
+        padding: 12px;
+        gap: 9px;
+    }
+
+    #checklist .checklist-task-item {
+        padding: 7px 8px;
     }
 }

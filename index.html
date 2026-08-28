@@ -157,7 +157,7 @@
 
                 <div class="stats-grid">
 
-                    <div class="stat-card">
+                    <div class="stat-card stat-card-clickable" role="button" tabindex="0" onclick="openDashboardDetail('clients')" onkeydown="if (event.key === 'Enter' || event.key === ' ') openDashboardDetail('clients')">
 
                         <div class="stat-icon">
                             ♙
@@ -171,7 +171,7 @@
                     </div>
 
 
-                    <div class="stat-card">
+                    <div class="stat-card stat-card-clickable" role="button" tabindex="0" onclick="openDashboardDetail('projects')" onkeydown="if (event.key === 'Enter' || event.key === ' ') openDashboardDetail('projects')">
 
                         <div class="stat-icon">
                             ▣
@@ -185,7 +185,7 @@
                     </div>
 
 
-                    <div class="stat-card">
+                    <div class="stat-card stat-card-clickable" role="button" tabindex="0" onclick="openDashboardDetail('payments')" onkeydown="if (event.key === 'Enter' || event.key === ' ') openDashboardDetail('payments')">
 
                         <div class="stat-icon">
                             Rp
@@ -201,7 +201,7 @@
                     </div>
 
 
-                    <div class="stat-card">
+                    <div class="stat-card stat-card-clickable" role="button" tabindex="0" onclick="openDashboardDetail('receivables')" onkeydown="if (event.key === 'Enter' || event.key === ' ') openDashboardDetail('receivables')">
 
                         <div class="stat-icon">
                             !
@@ -965,7 +965,9 @@
                         <div class="summary-line"><span>Harga Paket:</span><strong id="projectSummaryPackage">Rp. 0</strong></div>
                         <div class="summary-line"><span>Total Additional:</span><strong id="projectSummaryAdditional">+ Rp. 0</strong></div>
                         <div class="summary-line"><span>Diskon:</span><strong id="projectSummaryDiscount">- Rp. 0</strong></div>
-                        <div class="summary-line total-line"><span>Total Biaya Proyek:</span><strong id="projectSummaryTotal">Rp. 0</strong></div>
+                            <div class="summary-line total-line"><span>Total Biaya Proyek:</span><strong id="projectSummaryTotal">Rp. 0</strong></div>
+                            <div class="summary-line"><span>Telah Dibayar:</span><strong class="text-success" id="projectSummaryPaid">Rp. 0</strong></div>
+                            <div class="summary-line remaining-line"><span>Sisa Bayar:</span><strong class="text-danger" id="projectSummaryRemaining">Rp. 0</strong></div>
                     </div>
 
                     <input type="hidden" id="projectTotal">
@@ -2277,6 +2279,19 @@
                     <button type="submit" class="primary-button">Simpan Jadwal</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <div id="dashboardDetailModal" class="modal-overlay" onclick="if (event.target === this) closeDashboardDetail()">
+        <div class="modal modal-wide">
+            <div class="modal-header">
+                <div>
+                    <h3 id="dashboardDetailTitle">Detail Dashboard</h3>
+                    <span id="dashboardDetailSubtitle">Rincian data</span>
+                </div>
+                <button class="modal-close" type="button" onclick="closeDashboardDetail()">×</button>
+            </div>
+            <div id="dashboardDetailContent" class="dashboard-detail-content"></div>
         </div>
     </div>
 
