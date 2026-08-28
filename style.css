@@ -1015,6 +1015,18 @@ body {
     background: #fbfcfd;
 }
 
+.dashboard-list-item {
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.2s ease, padding 0.2s ease;
+}
+
+.dashboard-list-item:hover,
+.dashboard-list-item:focus-visible {
+    background: #f7f8fa;
+    outline: none;
+}
+
 .dashboard-detail-card > strong {
     display: block;
     margin-bottom: 13px;

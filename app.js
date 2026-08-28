@@ -887,7 +887,9 @@ function openDashboardDetail(type) {
         clients: { title: "Total Klien", subtitle: "Daftar klien dan informasi acara" },
         projects: { title: "Total Proyek", subtitle: "Daftar proyek yang tercatat" },
         payments: { title: "Pembayaran Klien", subtitle: "Riwayat pembayaran yang masuk" },
-        receivables: { title: "Piutang", subtitle: "Pembayaran proyek yang belum lunas" }
+        receivables: { title: "Piutang", subtitle: "Pembayaran proyek yang belum lunas" },
+        schedules: { title: "Jadwal Terdekat", subtitle: "Rincian agenda proyek berikutnya" },
+        recentPayments: { title: "Pembayaran Customer Terbaru", subtitle: "Rincian lima pembayaran terbaru" }
     };
     const config = configs[type];
     if (!config) return;
@@ -918,13 +920,31 @@ function openDashboardDetail(type) {
             const client = appData.clients.find(item => item.id === project?.clientId);
             return `<article class="dashboard-detail-card"><strong>${escapeHTML(project?.name || "Proyek tidak ditemukan")}</strong><div class="detail-card-grid"><span><b>Tgl Bayar</b>${payment.date ? formatDate(payment.date) : "-"}</span><span><b>Klien</b>${escapeHTML(client?.name || "-")}</span><span><b>Jenis</b>${escapeHTML(payment.type || "-")}</span><span><b>Nominal</b>${formatRupiah(payment.amount)}</span><span><b>Metode</b>${escapeHTML(payment.method || "-")}</span><span><b>Bukti</b>${payment.proof ? "Tersedia" : "-"}</span></div></article>`;
         });
-    } else {
+    } else if (type === "receivables") {
         cards = appData.projects.map(project => {
             const remaining = Math.max((Number(project.total) || 0) - getProjectPaid(project), 0);
             if (!remaining) return "";
             const client = appData.clients.find(item => item.id === project.clientId);
             return `<article class="dashboard-detail-card"><strong>${escapeHTML(client?.name || "Tanpa klien")}</strong><div class="detail-card-grid"><span><b>Proyek</b>${escapeHTML(project.name || "-")}</span><span><b>Paket</b>${escapeHTML(project.package || "-")}</span><span><b>Total Proyek</b>${formatRupiah(project.total)}</span><span><b>Total Bayar</b>${formatRupiah(getProjectPaid(project))}</span><span><b>Sisa Bayar</b><strong class="text-danger">${formatRupiah(remaining)}</strong></span></div></article>`;
         }).filter(Boolean);
+    } else if (type === "schedules") {
+        cards = [...appData.schedules]
+            .filter(item => item.date)
+            .sort((a, b) => new Date(a.date) - new Date(b.date))
+            .slice(0, 5)
+            .map(item => {
+                const project = appData.projects.find(projectItem => projectItem.id === item.projectId);
+                return `<article class="dashboard-detail-card"><strong>${escapeHTML(item.title || "Agenda")}</strong><div class="detail-card-grid"><span><b>Tanggal</b>${formatDate(item.date)}</span><span><b>Waktu</b>${escapeHTML(item.time || "-")}</span><span><b>Kategori</b>${escapeHTML(item.category || "-")}</span><span><b>Proyek</b>${escapeHTML(project?.name || "Agenda umum")}</span><span><b>Lokasi</b>${escapeHTML(item.location || "-")}</span><span><b>Catatan</b>${escapeHTML(item.notes || "-")}</span></div></article>`;
+            });
+    } else if (type === "recentPayments") {
+        cards = [...appData.payments]
+            .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
+            .slice(0, 5)
+            .map(payment => {
+                const project = appData.projects.find(item => item.id === payment.projectId);
+                const client = appData.clients.find(item => item.id === project?.clientId);
+                return `<article class="dashboard-detail-card"><strong>${escapeHTML(project?.name || "Proyek tidak ditemukan")}</strong><div class="detail-card-grid"><span><b>Tgl Bayar</b>${payment.date ? formatDate(payment.date) : "-"}</span><span><b>Klien</b>${escapeHTML(client?.name || "-")}</span><span><b>Jenis</b>${escapeHTML(payment.type || "-")}</span><span><b>Nominal</b>${formatRupiah(payment.amount)}</span><span><b>Metode</b>${escapeHTML(payment.method || "-")}</span><span><b>Bukti</b>${payment.proof ? "Tersedia" : "-"}</span><span><b>Keterangan</b>${escapeHTML(payment.notes || "-")}</span></div></article>`;
+            });
     }
     content.innerHTML = cards.length ? cards.join("") : `<div class="empty-state"><strong>Belum ada data</strong><span>Data akan muncul setelah ditambahkan.</span></div>`;
     modal.classList.add("show");
@@ -989,6 +1009,13 @@ function renderUpcomingSchedules() {
         const row =
             document.createElement("div");
 
+        row.className = "dashboard-list-item";
+        row.setAttribute("role", "button");
+        row.setAttribute("tabindex", "0");
+        row.onclick = () => openDashboardDetail("schedules");
+        row.onkeydown = event => {
+            if (event.key === "Enter" || event.key === " ") openDashboardDetail("schedules");
+        };
         row.style.width = "100%";
         row.style.padding = "10px 0";
         row.style.borderBottom =
@@ -1067,6 +1094,13 @@ function renderRecentPayments() {
         const row =
             document.createElement("div");
 
+        row.className = "dashboard-list-item";
+        row.setAttribute("role", "button");
+        row.setAttribute("tabindex", "0");
+        row.onclick = () => openDashboardDetail("recentPayments");
+        row.onkeydown = event => {
+            if (event.key === "Enter" || event.key === " ") openDashboardDetail("recentPayments");
+        };
         row.style.width = "100%";
         row.style.padding = "10px 0";
         row.style.borderBottom =
